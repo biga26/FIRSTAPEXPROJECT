@@ -1,0 +1,103 @@
+// Use .soql files to store SOQL queries.
+// You can execute queries in VS Code by selecting the
+//     query text and running the command:
+//     SFDX: Execute SOQL Query with Currently Selected Text
+
+SELECT ID, Name FROM Account
+
+SELECT ID, Name FROM Account WHERE NAME = 'Sample Accounting'
+
+SELECT ID, First_Name__c FROM Student_ID__c
+
+SELECT Id, Name, Email__c   FROM Staff__c
+WHERE Email__c != NULL
+
+SELECT Id, Name, Phone__c, Email__c   FROM Staff__c
+WHERE Email__c != NULL AND Phone__c != NULL
+
+SELECT Id, Name, Phone__c, Email__c   FROM Staff__c
+WHERE Email__c != '' AND Phone__c != NULL
+
+SELECT Id, Name, Phone__c, Email__c   FROM Staff__c
+WHERE Email__c = '' AND Phone__c = NULL
+
+SELECT Id, Name, Phone__c, Email__c, Is_Working__c   FROM Staff__c
+WHERE Email__c = '' AND Phone__c = NULL  AND Is_Working__c = false
+
+SELECT Id, Name, StageName, Amount FROM Opportunity
+WHERE StageName = 'Closed won' AND Amount >= 35000
+
+SELECT Id, Name, StageName, Amount FROM Opportunity
+ORDER BY Amount Desc
+
+SELECT Id, Name, StageName, Amount FROM Opportunity
+ORDER BY Amount Desc LIMIT 5
+
+SELECT ID, Name, StageName, Amount FROM Opportunity
+WHERE (StageName != 'Closed Won' OR StageName != 'Closed Lost') AND Name LIKE '%Hotels%'
+ORDER BY Amount ASC LIMIT 4
+
+SELECT ID, Name, Status__c, Priority__c, Requested_by_date__c FROM Salesforce_Ticket__c  WHERE
+Priority__c = 'High' AND
+Status__c != 'Completed' AND Status__c != 'Cancelled' ORDER BY
+Requested_by_date__c DESC
+
+
+Basic
+    SELECT ID, Name FROM Account
+    SELECT ID,Name,Project_Name__c FROM Salesforce_Project__c
+Order by, Limit
+    SELECT ID, Name FROM Account WHERE Name = 'Burlington Textiles Corp of America' ORDER BY Name LIMIT 1
+Filter – Like, Operators, AND OR
+    SELECT ID, Name FROM Account WHERE Name LIKE '%United%' ORDER BY Name
+    SELECT ID, Name, Phone FROM Account WHERE Phone != NULL
+    SELECT ID, Name, Status__c FROM Salesforce_Project__c WHERE Status__c != 'New'
+    SELECT ID, Name, Phone FROM Account WHERE (Phone != NULL OR Website != NULL) AND AccountNumber != NULL
+    SELECT ID,Name,Subject__c,Status__c,Priority__c FROM Salesforce_Ticket__c WHERE Status__c != '' AND Priority__c = 'High'
+
+
+    SELECT ID, Name, Account.Name, Account.AccountNumber FROM Contact // to choose parent object relationship. ex: parentname.Field
+
+    SELECT ID, Name, Priority__c, Salesforce_Project__r.Name, Salesforce_Project__r.Status__c  FROM Salesforce_Ticket__c // include  parent inside
+
+    SELECT ID, Name, Status__c, Project_Name__c, (SELECT Name, Status__c FROM Salesforce_Tickets__r) FROM Salesforce_Project__c // include child inside
+
+    SELECT Name, (SELECT Name, Phone FROM Contacts) FROM Account // It will show Name and Phone as a list in one field
+
+    SELECT Id, Name, Salesforce_Project__r.Status__c FROM Salesforce_Ticket__c WHERE Salesforce_Project__r.Status__c = 'New'
+
+    SELECT Id, Name, (SELECT Name, StageName FROM Opportunities WHERE StageName != 'Closed/Lost') FROM Account 
+
+    SELECT Id, Name, (SELECT Name, CloseDate FROM Opportunities WHERE (CloseDate > Today AND CloseDate != Null )) FROM Account LIMIT 1
+
+    SELECT Count() FROM Account
+
+    SELECT Sum(Amount) FROM Opportunity
+
+    SELECT Sum(Amount) FROM Opportunity WHERE StageName = 'Prospecting'
+
+    SELECT Max(Amount) FROM Opportunity WHERE StageName = 'Qualification'
+
+    SELECT Count(ID), StageName from Opportunity GROUP BY StageName
+
+    SELECT  StageName, Sum(Amount) from Opportunity GROUP BY StageName
+
+    SELECT  StageName, Sum(Amount) from Opportunity GROUP BY StageName HAVING Sum(Amount) > 15000
+
+    SELECT  StageName, Avg(Amount) from Opportunity GROUP BY StageName HAVING Avg(Amount) > 15000
+
+    SELECT  StageName, Avg(Amount) from Opportunity WHERE StageName = 'Closed Won' GROUP BY StageName HAVING Avg(Amount) > 15000
+
+
+    //SOSL
+    FIND {Tom} IN Email FIELDS RETURNING Lead(Name,Email, Phone) // search name in object FIELDS
+    FIND {Tom} IN Name FIELDS RETURNING Lead(Name,Email, Phone), Contact(Name, Id) // seatch in multiple objects and its fields
+
+
+
+
+
+
+
+
+
